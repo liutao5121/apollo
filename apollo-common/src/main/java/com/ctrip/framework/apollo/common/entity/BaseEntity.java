@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Apollo Authors
+ * Copyright 2022 Apollo Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package com.ctrip.framework.apollo.common.entity;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
 
+import java.time.Instant;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -38,25 +39,25 @@ public abstract class BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "`Id`")
+  @Column(name = "Id")
   private long id;
 
-  @Column(name = "`IsDeleted`", columnDefinition = "Bit default '0'")
-  protected boolean isDeleted = false;
+  @Column(name = "IsDeleted", columnDefinition = "Bit default '0'")
+  protected int isDeleted = 0;
 
-  @Column(name = "`DeletedAt`", columnDefinition = "Bigint default '0'")
+  @Column(name = "DeletedAt", columnDefinition = "Bigint default '0'")
   protected long deletedAt;
 
-  @Column(name = "`DataChange_CreatedBy`", nullable = false)
+  @Column(name = "DataChange_CreatedBy", nullable = false)
   private String dataChangeCreatedBy;
 
-  @Column(name = "`DataChange_CreatedTime`", nullable = false)
+  @Column(name = "DataChange_CreatedTime", nullable = false)
   private Date dataChangeCreatedTime;
 
-  @Column(name = "`DataChange_LastModifiedBy`")
+  @Column(name = "DataChange_LastModifiedBy")
   private String dataChangeLastModifiedBy;
 
-  @Column(name = "`DataChange_LastTime`")
+  @Column(name = "DataChange_LastTime")
   private Date dataChangeLastModifiedTime;
 
   public long getId() {
@@ -67,22 +68,26 @@ public abstract class BaseEntity {
     this.id = id;
   }
 
-  public boolean isDeleted() {
+  public int getDeleted() {
     return isDeleted;
   }
 
-  public void setDeleted(boolean deleted) {
-    isDeleted = deleted;
-    if (deleted && this.deletedAt == 0) {
-      // also set deletedAt value as epoch millisecond
-      this.deletedAt = System.currentTimeMillis();
-    } else if (!deleted) {
-      this.deletedAt = 0L;
-    }
+  public boolean isDeleted() {
+    return getDeleted() == 1 ? true : false;
+  }
+
+  public void setDeleted(boolean IsDeleted) {
+    isDeleted = (!IsDeleted ? 0 : 1);
+    // also set deletedAt value as epoch millisecond
+    this.deletedAt = System.currentTimeMillis();
   }
 
   public long getDeletedAt() {
     return deletedAt;
+  }
+
+  public void setDeletedAt(long deletedAt) {
+    this.deletedAt = deletedAt;
   }
 
   public String getDataChangeCreatedBy() {
@@ -120,10 +125,10 @@ public abstract class BaseEntity {
   @PrePersist
   protected void prePersist() {
     if (this.dataChangeCreatedTime == null) {
-        dataChangeCreatedTime = new Date();
+      dataChangeCreatedTime = new Date();
     }
     if (this.dataChangeLastModifiedTime == null) {
-        dataChangeLastModifiedTime = new Date();
+      dataChangeLastModifiedTime = new Date();
     }
   }
 
@@ -139,10 +144,10 @@ public abstract class BaseEntity {
 
   protected ToStringHelper toStringHelper() {
     return MoreObjects.toStringHelper(this).omitNullValues().add("id", id)
-        .add("dataChangeCreatedBy", dataChangeCreatedBy)
-        .add("dataChangeCreatedTime", dataChangeCreatedTime)
-        .add("dataChangeLastModifiedBy", dataChangeLastModifiedBy)
-        .add("dataChangeLastModifiedTime", dataChangeLastModifiedTime);
+            .add("dataChangeCreatedBy", dataChangeCreatedBy)
+            .add("dataChangeCreatedTime", dataChangeCreatedTime)
+            .add("dataChangeLastModifiedBy", dataChangeLastModifiedBy)
+            .add("dataChangeLastModifiedTime", dataChangeLastModifiedTime);
   }
 
   public String toString(){

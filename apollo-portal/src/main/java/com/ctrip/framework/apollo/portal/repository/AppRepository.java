@@ -41,6 +41,6 @@ public interface AppRepository extends PagingAndSortingRepository<App, Long> {
   Page<App> findByAppIdContainingOrNameContaining(String appId, String name, Pageable pageable);
 
   @Modifying
-  @Query("UPDATE App SET IsDeleted = true, DeletedAt = ROUND(UNIX_TIMESTAMP(NOW(4))*1000), DataChange_LastModifiedBy = ?2 WHERE AppId=?1 and IsDeleted = false")
+  @Query("UPDATE App SET isDeleted = 1, deletedAt = ROUND(UNIX_TIMESTAMP(NOW())*1000), dataChangeLastModifiedBy = ?2 WHERE appId=?1 and isDeleted = 0")
   int deleteApp(String appId, String operator);
 }

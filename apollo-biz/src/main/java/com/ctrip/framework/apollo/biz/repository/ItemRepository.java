@@ -44,7 +44,7 @@ public interface ItemRepository extends PagingAndSortingRepository<Item, Long> {
   Item findFirst1ByNamespaceIdOrderByLineNumDesc(Long namespaceId);
 
   @Modifying
-  @Query("update Item set IsDeleted = true, DeletedAt = ROUND(UNIX_TIMESTAMP(NOW(4))*1000), DataChange_LastModifiedBy = ?2 where NamespaceId = ?1 and IsDeleted = false")
+  @Query("update Item set isDeleted = 1, deletedAt = ROUND(UNIX_TIMESTAMP(NOW())*1000), dataChangeLastModifiedBy = ?2 where namespaceId = ?1 and isDeleted = 0")
   int deleteByNamespaceId(long namespaceId, String operator);
 
 }

@@ -43,6 +43,6 @@ public interface ConsumerRoleRepository extends PagingAndSortingRepository<Consu
   ConsumerRole findByConsumerIdAndRoleId(long consumerId, long roleId);
 
   @Modifying
-  @Query("UPDATE ConsumerRole SET IsDeleted = true, DeletedAt = ROUND(UNIX_TIMESTAMP(NOW(4))*1000), DataChange_LastModifiedBy = ?2 WHERE RoleId in ?1 and IsDeleted = false")
+  @Query("UPDATE ConsumerRole SET isDeleted = 1, deletedAt = ROUND(UNIX_TIMESTAMP(NOW())*1000), dataChangeLastModifiedBy = ?2 WHERE roleId in ?1 and isDeleted = 0")
   Integer batchDeleteByRoleIds(List<Long> roleIds, String operator);
 }
